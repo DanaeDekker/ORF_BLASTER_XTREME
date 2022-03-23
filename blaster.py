@@ -4,10 +4,13 @@ from Bio import Entrez
 import re
 import sys
 
+# IMPORTANT!
+# Header should be a single word without any symbols like > or |.
+# This script only accepts one header and sequence at a time.
+
 
 def check_file(file_name):
     """ Check if the file exist and create one if it doesn't.
-
     :param file_name: string - name of the file
     """
     # Define the variables.
@@ -17,7 +20,7 @@ def check_file(file_name):
     except FileNotFoundError:
         with open(file_name, "w") as file_open:
             file_open.write(
-                "tool\tgene/orf\tseq\ttaxid\torganism"
+                "tool\tid\tseq\ttaxid\torganism"
                 "\taccession\tprotein\tlength\texpect\tscore"
                 "\tidentities\tpositives\tgaps\tsubject"
                 "\tquery\tmatch\n")
@@ -25,18 +28,13 @@ def check_file(file_name):
 
 def blast(file_name, header, seq, matrix_name, expect, hitlist_size):
     """ Function to BLAST the sequences.
-
     :param file_name: string - name of the file with the results
-    :param header: string - contains the headers
+    :param header: string - contains the name of the header
     :param seq: string - contains the sequences
     :param matrix_name: string - name of the scorematrix
     :param expect: float - expect cutoff value
     :param hitlist_size: int - maximum number of results per BLAST
     """
-    # Get the name of the ORF.
-    header_split = str(header).split("|")[1]
-    orf = header_split.split(":")[0]
-
     # Use BLAST.
     result_handle = NCBIWWW.qblast("blastp",
                                    "swissprot",
@@ -46,7 +44,7 @@ def blast(file_name, header, seq, matrix_name, expect, hitlist_size):
                                    hitlist_size=hitlist_size)
 
     # Parse the result_handle.
-    results = parse_xml(orf, seq, result_handle)
+    results = parse_xml(header, seq, result_handle)
 
     # Write the results to the tsv-file.
     with open(file_name, "a") as file_open:
@@ -55,10 +53,9 @@ def blast(file_name, header, seq, matrix_name, expect, hitlist_size):
                 file_open.write(result + "\n")
 
 
-def parse_xml(orf, seq, result_handle):
+def parse_xml(header, seq, result_handle):
     """ Parse the xml-file.
-
-    :param orf: string - name of the ORF
+    :param header: string - name of the ORF
     :param seq: string - sequence
     :param result_handle - result handle of the BLAST
     """
@@ -98,7 +95,7 @@ def parse_xml(orf, seq, result_handle):
             print(scientific + " | " + protein)
 
             # Append the results.
-            row = str("orffinder" + "\t" + str(orf)
+            row = str("orfipy" + "\t" + str(header)
                       + "\t" + str(seq) + "\t" + str(taxid) +
                       "\t" + str(scientific) + "\t" + str(values[1]) +
                       "\t" + str(protein) + "\t" + str(values[2]) +
@@ -119,7 +116,6 @@ def parse_xml(orf, seq, result_handle):
 
 def get_taxid(scientific):
     """ Get the taxid and lineage of an organism.
-
     :param scientific: string - scientific name of the organism
     :return taxid_lineage: string - contains the taxid, domain, genus
     and species of the organism
@@ -135,7 +131,6 @@ def get_taxid(scientific):
 
 def get_protein(title):
     """ Get the accession and the name of a protein.
-
     :param title: string - contains the name of the protein and the
     scientific name of the organism
     :return protein: string - contains the name of the protein
