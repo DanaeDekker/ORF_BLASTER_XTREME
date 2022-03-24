@@ -1,0 +1,23 @@
+1 Standard
+2 Vertebrate Mitochondrial
+3 Yeast Mitochondrial
+4 Mold Mitochondrial; Protozoan Mitochondrial; Coelenterate Mitochondrial; Mycoplasma; Spiroplasma
+5 Invertebrate Mitochondrial
+6 Ciliate Nuclear; Dasycladacean Nuclear; Hexamita Nuclear
+7 Echinoderm Mitochondrial; Flatworm Mitochondrial
+8 Euplotid Nuclear
+9 Bacterial, Archaeal and Plant Plastid
+10 Alternative Yeast Nuclear
+11 Ascidian Mitochondrial
+12 Alternative Flatworm Mitochondrial
+13 Chlorophycean Mitochondrial
+14 Trematode Mitochondrial
+15 Scenedesmus obliquus Mitochondrial Code
+16 Thraustochytrium mitochondrial code
+17 Pterobranchia Mitochondrial
+18 Candidate Division SR1 and Gracilibacteria
+19 Pachysolen tannophilus Nuclear Code
+20 Karyorelict Nuclear
+21 Condylostoma Nuclear
+22 Mesodinium Nuclear
+23 Peritrich Nuclear
