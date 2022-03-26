@@ -12,7 +12,7 @@ public class File_handler_orfblaster {
     static File directoryPath_BLAST = new File("test.tsv");
 
     public static void main(String[] args) throws IOException {
-        // read_ORF_File();
+        read_ORF_File();
         read_BLAST_File();
     }
 
@@ -43,14 +43,3 @@ public class File_handler_orfblaster {
         }
     }
 }
-
-
-    
-
-    
-
-
-// blast resultaten inlezen TSV.
-
-
-
