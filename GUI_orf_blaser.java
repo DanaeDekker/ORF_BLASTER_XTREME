@@ -16,12 +16,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
     private JButton openButton, orfipy_button;
     private JFileChooser fileChooser;
-    private JTextField nameField, orf_min, orf_max;
+    private JTextField nameField, orf_min, orf_max, file_name, expect_value;
     private JPanel orfpanel, filepanel, orfipypanel;
     private JTextArea orffield;
     private JScrollPane orfpanelscroll;
-    private JComboBox t_table, orf_mode;
-    private JLabel orf_min_label, orf_max_label, t_table_label, ignore_case_but, modus_label;
+    private JComboBox t_table, orf_mode, matrix, word_size;
+    private JLabel orf_min_label, orf_max_label, t_table_label, ignore_case_but, modus_label, file_name_results, word_size_label, expect_label;
     private JCheckBox ignore_case;
     private BufferedReader inFile;
     private List<String> menulist, orf_menu;
@@ -76,7 +76,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         openButton.addActionListener(this);
 
         try {
-            menulist = Files.readAllLines(Paths.get("applicatie1/menuoptions.txt"));
+            menulist = Files.readAllLines(Paths.get("menuoptions.txt"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -145,14 +145,14 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
         try {
-            orf_menu = Files.readAllLines(Paths.get("applicatie1/menuoptionsmodus.txt"));
+            orf_menu = Files.readAllLines(Paths.get("menuoptionsmodus.txt"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         String[] orf_menu_list = orf_menu.toArray(new String[0]);
 
-        orf_mode = new JComboBox(orf_menu_list); //dropdownmenu for selecting file
+        orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
         gridcon.gridy = 3;
@@ -160,15 +160,27 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(10,10,10,500);
         window.add(orf_mode, gridcon); 
 
-        gridcon.fill = GridBagConstraints.HORIZONTAL;
         orfipy_button = new JButton("Find ORFs");
         gridcon.gridx = 0;
         gridcon.gridy = 3;
-        gridcon.weighty = 1.0;
         gridcon.anchor = GridBagConstraints.CENTER;
         gridcon.insets = new Insets(10,300 ,10,10);
         window.add(orfipy_button, gridcon);
         orfipy_button.addActionListener(this);
+
+        file_name_results =  new JLabel("Blast results file name");
+        gridcon.gridx = 0;
+        gridcon.gridy = 4;
+        gridcon.insets = new Insets(0,10,0,0);
+        window.add(file_name_results, gridcon);
+
+        file_name = new JTextField();
+        file_name.setBackground(Color.white);
+        gridcon.gridx = 0;
+        gridcon.gridy = 4;
+        gridcon.insets = new Insets(0,200,0,300);
+        window.add(file_name, gridcon);
+
 
         
         // orfpanel = new JPanel();
