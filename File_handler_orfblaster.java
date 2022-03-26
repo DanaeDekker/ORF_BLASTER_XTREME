@@ -1,8 +1,5 @@
-package Blok_7;
 import java.io. *;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Read fasta file
@@ -11,26 +8,49 @@ import java.util.Scanner;
 
 public class File_handler_orfblaster {
 
-    static File directoryPath = new File("src/Blok_7/deel_d.fa");
+    static File directoryPath_ORF = new File("deel_d.fa");
+    static File directoryPath_BLAST = new File("test.tsv");
 
-    public static void main(String[] args) throws FileNotFoundException {
-        readFile();
+    public static void main(String[] args) throws IOException {
+        // read_ORF_File();
+        read_BLAST_File();
     }
 
-    public static void readFile() throws FileNotFoundException {
-        Scanner sc = new Scanner(directoryPath);
-        HashMap<String, String> resultMap = new HashMap<>();
-        while (sc.hasNextLine()) {
-            String[] keys = sc.nextLine().split("\n");
-            String[] values = sc.nextLine().split("\n");
-            for (int i = 0; i < keys.length; i++) {
-                resultMap.put(keys[i] + "\n", values[i]);
+    public static void read_ORF_File() throws FileNotFoundException {
+        try (Scanner scan_ORF = new Scanner(directoryPath_ORF)) {
+            HashMap<String, String> resultMap_ORF = new HashMap<>();
+            while (scan_ORF.hasNextLine()) {
+                String[] keys = scan_ORF.nextLine().split("\n");
+                String[] values = scan_ORF.nextLine().split("\n");
+                for (int i = 0; i < keys.length; i++) {
+                    resultMap_ORF.put(keys[i] + "\n", values[i]);
+                    System.out.println(keys[i]);
+                }
             }
         }
-        for (Map.Entry<String, String> map : resultMap.entrySet()) {
-            System.out.println(map);
-        }
+    }
 
+    public static void read_BLAST_File() throws IOException {
+        try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
+            ArrayList<String[]> resultMap_BLAST = new ArrayList<String[]>();
+            while (scan_BLAST.hasNextLine()) {
+                String[] split = scan_BLAST.nextLine().split("\t");
+                resultMap_BLAST.add(split);
+            }
+            // for (int i = 0; i < resultMap_BLAST.size(); i++) {
+            //     System.out.println(Arrays.toString(resultMap_BLAST.get(i)));
+            // }    
+        }
     }
 }
+
+
+    
+
+    
+
+
+// blast resultaten inlezen TSV.
+
+
 
