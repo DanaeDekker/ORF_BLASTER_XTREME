@@ -14,23 +14,22 @@ import java.util.List;
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
 
-    private JButton openButton, orfipy_button;
-    private JFileChooser fileChooser;
-    private JTextField nameField, orf_min, orf_max;
+    private JButton openButton, orfipy_button, blast_button;
+    private JFileChooser file_chooser;
+    private JTextField namefield, orf_min, orf_max, file_name, expect_value;
     private JPanel orfpanel, filepanel, orfipypanel;
     private JTextArea orffield;
     private JScrollPane orfpanelscroll;
-    private JComboBox t_table, orf_mode;
-    private JLabel orf_min_label, orf_max_label, t_table_label, ignore_case_but, modus_label;
+    private JComboBox t_table, orf_mode, matrix, word_size, database;
+    private JLabel orf_min_label, orf_max_label, ignore_case_but, file_name_results, word_size_label, expect_label;
     private JCheckBox ignore_case;
-    private BufferedReader inFile;
-    private List<String> menulist, orf_menu;
+    private List<String> menulist;
   
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException e) {
-            // handle exception
+            // handle exceptionopen_file(
         } catch (ClassNotFoundException e) {
             // handle exception
         } catch (InstantiationException e) {
@@ -55,40 +54,36 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         GridBagConstraints gridcon = new GridBagConstraints();
         gridcon.fill = GridBagConstraints.HORIZONTAL;
            
-        gridcon.fill = GridBagConstraints.HORIZONTAL;
-        nameField = new JTextField(25);
-        //nameField.setPreferredSize(new Dimension(50,25));
+        namefield = new JTextField(25);
         gridcon.gridx =  0;
         gridcon.gridy  = 0;
         gridcon.anchor = GridBagConstraints.CENTER;
         gridcon.insets = new Insets(10,10,10,10);
-        window.add(nameField, gridcon);
-        
-        gridcon.fill = GridBagConstraints.HORIZONTAL;
+        window.add(namefield, gridcon);
+
         openButton = new JButton("open");
         openButton.setPreferredSize(new Dimension(100,25));
         gridcon.gridx = 1;
         gridcon.gridy = 0;
-        gridcon.weighty = 1.0;
         gridcon.anchor = GridBagConstraints.CENTER;
         gridcon.insets = new Insets(10,10,10,10);
         window.add(openButton, gridcon);
         openButton.addActionListener(this);
 
         try {
-            menulist = Files.readAllLines(Paths.get("applicatie1/menuoptions.txt"));
+            menulist = Files.readAllLines(Paths.get("menuoptions.txt"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         String[] menu_list = menulist.toArray(new String[0]);
 
-        t_table = new JComboBox(menu_list); //dropdownmenu for selecting file
+        t_table = new JComboBox(menu_list);
         t_table.setSelectedIndex(0);
         gridcon.gridx = 0;
         gridcon.gridy = 1;
         gridcon.gridwidth = 1;
-        gridcon.insets = new Insets(0,10,10,0);
+        gridcon.insets = new Insets(0,10,10,10);
         window.add(t_table, gridcon); 
 
 
@@ -144,15 +139,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(0,0,0,10);
         window.add(ignore_case, gridcon);
 
-        try {
-            orf_menu = Files.readAllLines(Paths.get("applicatie1/menuoptionsmodus.txt"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        String[] orf_menu_list = orf_menu.toArray(new String[0]);
-
-        orf_mode = new JComboBox(orf_menu_list); //dropdownmenu for selecting file
+    
+        String[] orf_menu_list = {"--Partial-3", "--partial-5", "--between-stops"};
+        orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
         gridcon.gridy = 3;
@@ -160,38 +149,113 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(10,10,10,500);
         window.add(orf_mode, gridcon); 
 
-        gridcon.fill = GridBagConstraints.HORIZONTAL;
         orfipy_button = new JButton("Find ORFs");
         gridcon.gridx = 0;
         gridcon.gridy = 3;
-        gridcon.weighty = 1.0;
         gridcon.anchor = GridBagConstraints.CENTER;
         gridcon.insets = new Insets(10,300 ,10,10);
         window.add(orfipy_button, gridcon);
         orfipy_button.addActionListener(this);
 
-        
-        // orfpanel = new JPanel();
-        // orffield = new JTextArea(); // area for the genbank information
-        // orffield.setFont(orffield.getFont().deriveFont(20f)); // increase font size
-        // orffield.setSize(300, 400);
-        // orffield.setBackground(Color.white);
-        // orffield.setText("");
-        // orfpanelscroll = new JScrollPane(orffield);
-        // orfpanelscroll.setPreferredSize(new Dimension(300, 400));
-        // // makes sure that there is a vertical scroll balk even when empty
-        // orfpanelscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        // gridcon.gridx = 0;
-        // gridcon.gridy = 2;
-        // gridcon.gridwidth = 2;
-        // window.add(orfpanelscroll, gridcon);
+        file_name_results =  new JLabel("Blast results file name");
+        gridcon.gridx = 0;
+        gridcon.gridy = 4;
+        gridcon.insets = new Insets(0,10,0,0);
+        window.add(file_name_results, gridcon);
 
+        file_name = new JTextField();
+        file_name.setBackground(Color.white);
+        gridcon.gridx = 0;
+        gridcon.gridy = 4;
+        gridcon.insets = new Insets(0,200,0,300);
+        window.add(file_name, gridcon);
+
+        String[] matrix_menu =  {"Select score matrix","PAM30","PAM70", "PAM250", "BLOSUM80", "BLOSUM62", "BLOSUM45", "BLOSUM50", "BLOSUM90"};
+        matrix =  new JComboBox<>(matrix_menu);
+        matrix.setSelectedIndex(0);
+        gridcon.gridx = 0;
+        gridcon.gridy = 4;
+        gridcon.insets =  new Insets(0,500,0,10);
+        window.add(matrix, gridcon);
+
+        String[] database_menu = {"Select database", "Swissprot"};
+        database = new JComboBox<>(database_menu);
+        database.setSelectedIndex(0);
+        gridcon.gridx = 0;
+        gridcon.gridy = 5;
+        gridcon.insets = new Insets(10,10,10,600);
+        window.add(database, gridcon);
+
+        word_size_label =  new JLabel("Word size");
+        gridcon.gridx = 0;
+        gridcon.gridy = 5;
+        gridcon.insets = new Insets(0,200,0,0);
+        window.add(word_size_label, gridcon);
+
+        String[] word_size_menu = {"2", "3",  "6"};
+        word_size =  new JComboBox<>(word_size_menu);
+        word_size.setSelectedIndex(2);
+        gridcon.gridx = 0;
+        gridcon.gridy = 5;
+        gridcon.insets = new Insets(0,300,0,400);
+        window.add(word_size, gridcon);
+
+        expect_label = new JLabel("Except value threshold");
+        gridcon.gridx = 0;
+        gridcon.gridy = 5;
+        gridcon.insets =  new Insets(0,400,0,200);
+        window.add(expect_label, gridcon);
+
+        expect_value = new JTextField();
+        expect_value.setBackground(Color.white);
+        gridcon.gridx = 0;
+        gridcon.gridy = 5;
+        gridcon.insets = new Insets(0,600,0,10);
+        window.add(expect_value, gridcon);
+
+        blast_button = new JButton("BLAST!");
+        gridcon.gridx = 1;
+        gridcon.gridy = 5;
+        gridcon.anchor = GridBagConstraints.CENTER;
+        gridcon.insets = new Insets(10,10,10,10);
+        window.add(blast_button, gridcon);
+        blast_button.addActionListener(this);
+
+        orffield = new JTextArea();
+        orffield.setFont(orffield.getFont().deriveFont(20f)); // increase font size
+        orffield.setBackground(Color.white);
+        orffield.setText("");
+        orfpanelscroll = new JScrollPane(orffield);
+        orfpanelscroll.setPreferredSize(new Dimension(300, 400));
+        // makes sure that there is a vertical scroll balk even when empty
+        orfpanelscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        gridcon.gridx = 0;
+        gridcon.gridy = 6;
+        gridcon.gridwidth = 2;
+        window.add(orfpanelscroll, gridcon);
     }
 
+    public void use_orfipy(){
+        File file;
+        int reply;
+        file_chooser = new JFileChooser();
+        reply = file_chooser.showOpenDialog(this);
+        if (reply == 0) {
+            file = file_chooser.getSelectedFile();
+            namefield.setText(file.getAbsolutePath());
+        }
+    } 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
+        
+        if (e.getSource().equals(openButton)){
+            use_orfipy();
+        }
+        
+
+        //String menuitem = (String) menudrop.getSelectedItem(); //get  which file is selected
+        //String name_new_file = newfilefield.getText(); //get what text is put in
         
     }
 }
