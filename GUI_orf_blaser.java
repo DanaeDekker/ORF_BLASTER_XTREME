@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.io.*;
+import java.lang.ProcessBuilder;
 
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
@@ -140,7 +142,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
     
-        String[] orf_menu_list = {"--Partial-3", "--partial-5", "--between-stops"};
+        String[] orf_menu_list = {"Select modus", "--Partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -235,7 +237,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(orfpanelscroll, gridcon);
     }
 
-    public void use_orfipy(){
+    public void get_path(){
         File file;
         int reply;
         file_chooser = new JFileChooser();
@@ -246,11 +248,53 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     } 
 
+    public void use_orfipy(){
+        String path =  namefield.getText();
+        String ignore_case_value;
+        String modus =  orf_mode.getName();
+        String table_num = "--table" + "10"; // get linked to hashmap
+        String max_length = "--max " + orf_max.getText();
+        String min_length =  "--min " + orf_min.getText();
+        if (ignore_case.isSelected()){
+            ignore_case_value = "--ignore-case";
+        }   else {
+            ignore_case_value = "";
+        }
+
+        String orfipy_command = "--outdir modus results_map " + " " + --table_num + " " + "--PEP outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        // Windows
+        processBuilder.command("bash", "-c", "orfipy -h");
+
+        try {
+
+            Process process = processBuilder.start();
+
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    
+        
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         
         if (e.getSource().equals(openButton)){
+            get_path();
+        } else if(e.getSource().equals(orfipy_button)){
             use_orfipy();
+        } else if (e.getSource().equals(blast_button)){
+            //somethingblast related
         }
         
 

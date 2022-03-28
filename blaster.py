@@ -8,7 +8,6 @@ import sys
 # Header should be a single word without any symbols like > or |.
 # This script only accepts one header and sequence at a time.
 
-
 def check_file(file_name):
     """ Check if the file exist and create one if it doesn't.
     :param file_name: string - name of the file
@@ -26,22 +25,22 @@ def check_file(file_name):
                 "\tquery\tmatch\n")
 
 
-def blast(file_name, header, seq, matrix_name, expect, hitlist_size):
+def blast(file_name, header, seq, db, matrix_name, expect):
     """ Function to BLAST the sequences.
     :param file_name: string - name of the file with the results
     :param header: string - contains the name of the header
     :param seq: string - contains the sequences
+    :param db: string - name of the database
     :param matrix_name: string - name of the scorematrix
     :param expect: float - expect cutoff value
-    :param hitlist_size: int - maximum number of results per BLAST
     """
     # Use BLAST.
     result_handle = NCBIWWW.qblast("blastp",
-                                   "swissprot",
+                                   db,
                                    seq,
                                    matrix_name=matrix_name,
                                    expect=expect,
-                                   hitlist_size=hitlist_size)
+                                   hitlist_size=10)
 
     # Parse the result_handle.
     results = parse_xml(header, seq, result_handle)
@@ -153,12 +152,12 @@ if __name__ == '__main__':
     file_name = sys.argv[1]
     header = sys.argv[2]
     seq = sys.argv[3]
-    matrix_name = sys.argv[4]
-    expect = float(sys.argv[5])
-    hitlist_size = int(sys.argv[6])
+    db = sys.argv[4]
+    matrix_name = sys.argv[5]
+    expect = float(sys.argv[6])
 
     # If neccesary, create the file that will contain the results.
     check_file(file_name)
 
     # Use BLAST on the sequence.
-    blast(file_name, header, seq, matrix_name, expect, hitlist_size)
+    blast(file_name, header, seq, db, matrix_name, expect)
