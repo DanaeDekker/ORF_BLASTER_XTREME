@@ -260,11 +260,11 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }   else {
             ignore_case_value = "";
         }
-
-        String orfipy_command = "--outdir modus results_map " + " " + --table_num + " " + "--PEP outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+        String orfipy_command = "orfipy --outdir /results_map " + " " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+        System.out.println(orfipy_command);
         ProcessBuilder processBuilder = new ProcessBuilder();
-        // Windows
-        processBuilder.command("bash", "-c", "orfipy -h");
+
+        processBuilder.command("bash", "-c", orfipy_command);
 
         try {
 
@@ -273,13 +273,13 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             BufferedReader reader =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
+            // int exitCode = process.waitFor();
+            // System.out.println("\nExited with error code : " + exitCode);
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
         }
 
     
