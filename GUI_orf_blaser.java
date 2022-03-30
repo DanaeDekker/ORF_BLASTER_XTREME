@@ -8,17 +8,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.io.*;
 
 
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
-
+    private File_handler_orfblaster  c_file = new File_handler_orfblaster();
     private JButton openButton, orfipy_button, blast_button;
     private JFileChooser file_chooser;
     private JTextField namefield, orf_min, orf_max, file_name, expect_value;
-    private JPanel orfpanel, filepanel, orfipypanel;
     private JTextArea orffield;
     private JScrollPane orfpanelscroll;
     private JComboBox t_table, orf_mode, matrix, word_size, database;
@@ -74,10 +74,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         try {
             menulist = Files.readAllLines(Paths.get("menuoptions.txt"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        String[] menu_list = menulist.toArray(new String[0]);
+        String[] menu_list = {"",""};
 
         t_table = new JComboBox(menu_list);
         t_table.setSelectedIndex(0);
@@ -141,7 +140,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
     
-        String[] orf_menu_list = {"Select modus", "--Partial-3", "--partial-5", "--between-stops"};
+        String[] orf_menu_list = {"Select modus", "Start naar stop", "--Partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -248,42 +247,40 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     } 
 
     public void use_orfipy(){
+
         String path =  namefield.getText();
-        String ignore_case_value;
+        
         String modus =  orf_mode.getName();
+
         String table_num = "--table" + "10"; // get linked to hashmap
-        String max_length = "--max " + orf_max.getText();
-        String min_length =  "--min " + orf_min.getText();
+
+        String max_length = "--max " + orf_max.getText(); //if filed
+
+        String min_length =  "--min " + orf_min.getText(); //if filled /not = min_lenght = "";
+
+        String ignore_case_value;
         if (ignore_case.isSelected()){
             ignore_case_value = "--ignore-case";
         }   else {
             ignore_case_value = "";
         }
-        String orfipy_command = "orfipy --outdir /results_map " + " " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
-        System.out.println(orfipy_command);
+        String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
         ProcessBuilder processBuilder = new ProcessBuilder();
-
         processBuilder.command("bash", "-c", orfipy_command);
-
         try {
-
             Process process = processBuilder.start();
-
             BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            // int exitCode = process.waitFor();
-            // System.out.println("\nExited with error code : " + exitCode);
-
-        } catch (IOException e) {
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));       
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
+            } catch (IOException e) {
             e.printStackTrace();
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
+            } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-    
-        
     }
+        
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -295,10 +292,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         } else if (e.getSource().equals(blast_button)){
             //somethingblast related
         }
-        
 
-        //String menuitem = (String) menudrop.getSelectedItem(); //get  which file is selected
-        //String name_new_file = newfilefield.getText(); //get what text is put in
         
     }
 }
