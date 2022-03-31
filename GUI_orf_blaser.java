@@ -270,9 +270,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             if(t_table.getSelectedItem().equals("Select translation table")){
                 table_num = "";
             } else{
-                table_num = "--table" + t_table_map.get(t_table.getSelectedItem()); 
+                table_num = t_table_map.get(t_table.getSelectedItem()); 
             }
-            
 
             if(max_length.equals("--max ")){
                 max_length = " ";}
@@ -285,9 +284,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
             System.out.println(orfipy_command);
-            //use_command(orfipy_command);
+            use_command(orfipy_command);
         }
     }
 
