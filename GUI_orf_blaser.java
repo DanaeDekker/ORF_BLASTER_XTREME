@@ -2,19 +2,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.io.*;
 
 
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
+    private File file;
     private File_handler_orfblaster  c_file = new File_handler_orfblaster();
     private JButton openButton, orfipy_button, blast_button;
     private JFileChooser file_chooser;
@@ -237,7 +236,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     }
 
     public void get_path(){
-        File file;
         int reply;
         file_chooser = new JFileChooser();
         reply = file_chooser.showOpenDialog(this);
@@ -270,22 +268,21 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             if(t_table.getSelectedItem().equals("Select translation table")){
                 table_num = "";
             } else{
-                table_num = "--table" + t_table_map.get(t_table.getSelectedItem());
+                table_num = t_table_map.get(t_table.getSelectedItem());
             }
-
-            if(max_length.equals("--max ")){
-                max_length = " ";}
 
             if(min_length.equals("--min ")){
                 min_length = " ";}
+
+            if(max_length.equals("--max ")){
+                max_length = " ";}           
 
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
-            System.out.println(orfipy_command);
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
             use_command(orfipy_command);
         }
     }
@@ -309,47 +306,46 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     public void use_blast(){
         String path =  namefield.getText();
         String file = file_name.getText();
-
-        if(file.equals("")){
-            file = "output";}
-
-        String eval = " -evalue " + expect_value.getText();
+        String eval = expect_value.getText();
         if(eval.equals(" -evalue ")){
-            eval = "";}
+           eval = "";}
 
         String matrices = (String) matrix.getSelectedItem();
         if(matrices.equals("Select score matrix")){
             matrices = "BLOSUM62";
         }
-
-        String word = (String) word_size.getSelectedItem();
-
+        
         String data = (String) database.getSelectedItem();
         if(data.equals("Select database")){
-            data = "nr";}
-        else {data = data.toLowerCase();}
+           data = "Swissprot";}
+           else {data = data.toLowerCase();}
+
+        for (Entry<String, String> entry: c_file.resultMap_ORF.entrySet()){
+            System.out.println(entry);
+            if(file.equals("")){
+                file = "output";}
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, entry.getKey(), entry.getValue(), data, matrices, eval);
+                Process process = processBuilder.start();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                BufferedReader readers = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+                String lines=null;
+                while((lines=reader.readLine())!=null){
+                    System.out.println(lines);
+                }
+
+                while((lines=readers.readLine())!=null){
+                    System.out.println(lines);
 
 
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "blaster.py", file, file, file, data, matrices, eval);
-            Process process = processBuilder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader readers = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-            String lines=null;
-            while((lines=reader.readLine())!=null){
-                System.out.println(lines);
             }
-
-            while((lines=readers.readLine())!=null){
-                System.out.println(lines);
-
-
+        } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    } catch (IOException e) {
-            e.printStackTrace();
-        }}
+    }
 
         @Override
     public void actionPerformed(ActionEvent e) {
@@ -358,6 +354,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             get_path();
         } else if(e.getSource().equals(orfipy_button)){
             use_orfipy();
+            try {
+                c_file.read_ORF_File(file.getParent() +"/results/outputorfipy.fa");
+            } catch (FileNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         } else if (e.getSource().equals(blast_button)){
             use_blast();
         }
