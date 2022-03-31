@@ -306,5 +306,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         } else if (e.getSource().equals(blast_button)){
             //somethingblast related
         }
+<<<<<<< HEAD
     }
     }
+=======
+
+
+    }
+}
+>>>>>>> edfe72e60004ae45bd1673b143cce9053f6da014
