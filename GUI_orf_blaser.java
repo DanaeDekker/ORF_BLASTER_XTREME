@@ -286,7 +286,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }
             String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
             System.out.println(orfipy_command);
-            //use_command(orfipy_command);
+            use_command(orfipy_command);
         }
     }
 
@@ -329,21 +329,29 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             data = "nr";}
         else {data = data.toLowerCase();}
 
-        ProcessBuilder processBuilder = new ProcessBuilder("python", "blaster.py", file, file, file, data, matrices, eval);
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
-    @Override
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("python", "blaster.py", file, file, file, data, matrices, eval);
+            Process process = processBuilder.start();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader readers = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String lines=null;
+            while((lines=reader.readLine())!=null){
+                System.out.println(lines);
+            }
+
+            while((lines=readers.readLine())!=null){
+                System.out.println(lines);
+
+
+        }
+    } catch (IOException e) {
+            e.printStackTrace();
+        }}
+
+        @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource().equals(openButton)){
