@@ -1,3 +1,7 @@
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+//klas: bin2b, groep 6
+// datum: 31MRT2022
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,6 +37,10 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
 
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -245,8 +253,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
-    public void use_orfipy(){
 
+    public void use_orfipy(){
         String path =  namefield.getText();
         if(path.equals("")){
             JOptionPane.showMessageDialog(null, "No document selected");
@@ -257,7 +265,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             String ignore_case_value;
             String table_num;
 
-            System.out.println(modus);
             if(modus.equals("Start to stop")){
                 modus = "";}
 
@@ -287,6 +294,10 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+    
+    /** 
+     * @param command
+     */
     public void use_command(String command){
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command("bash", "-c", command);
@@ -314,7 +325,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         if(matrices.equals("Select score matrix")){
             matrices = "BLOSUM62";
         }
-        
+
         String data = (String) database.getSelectedItem();
         if(data.equals("Select database")){
            data = "Swissprot";}
@@ -347,6 +358,10 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+        
+        /** 
+         * @param e
+         */
         @Override
     public void actionPerformed(ActionEvent e) {
 

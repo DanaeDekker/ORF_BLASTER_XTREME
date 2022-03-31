@@ -1,3 +1,7 @@
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+//klas: bin2b, groep 6
+// datum: 31MRT2022
+
 import java.io. *;
 import java.util.*;
 
@@ -13,6 +17,11 @@ public class File_handler_orfblaster {
     ArrayList<String[]> resultMap_BLAST;
 
 
+    
+    /** 
+     * @param path
+     * @throws FileNotFoundException
+     */
     public void read_ORF_File(String path) throws FileNotFoundException {
         File directoryPath_ORF = new File(path);
         try (Scanner scan_ORF = new Scanner(directoryPath_ORF)) {

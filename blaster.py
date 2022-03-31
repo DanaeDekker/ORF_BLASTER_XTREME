@@ -1,3 +1,8 @@
+# auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+# klas: bin2b, groep 6
+# datum: 31MRT2022
+
+
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 from Bio import Entrez
