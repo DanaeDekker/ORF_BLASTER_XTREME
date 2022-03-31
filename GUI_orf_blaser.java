@@ -30,7 +30,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             "13 Chlorophycean Mitochondrial", "14 Trematode Mitochondrial", "15 Scenedesmus obliquus Mitochondrial Code", "16 Thraustochytrium mitochondrial code",
             "17 Pterobranchia Mitochondrial", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code", "20 Karyorelict Nuclear",
             "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
-    private String[] tables = {"", "table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", "--table 14", "--table 16",
+    private String[] tables = {"", "--table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", "--table 14", "--table 16",
     "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
 
 
@@ -257,11 +257,22 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             String max_length = "--max " + orf_max.getText();
             String min_length =  "--min " + orf_min.getText();
             String ignore_case_value;
+            String table_num;
 
             System.out.println(modus);
             if(modus.equals("Start to stop")){
                 modus = "";}
-            String table_num = "--table" + "10"; // get linked to hashmap
+            
+            HashMap<String, String> t_table_map =  new HashMap<String, String>();
+            for(int i = 0;i < menu_list.length; i++)
+                t_table_map.put(menu_list[i], tables[i]);
+            
+            if(t_table.getSelectedItem().equals("Select translation table")){
+                table_num = "";
+            } else{
+                table_num = "--table" + t_table_map.get(t_table.getSelectedItem()); 
+            }
+            
 
             if(max_length.equals("--max ")){
                 max_length = " ";}
@@ -274,9 +285,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
             System.out.println(orfipy_command);
-            use_command(orfipy_command);
+            //use_command(orfipy_command);
         }
     }
 
