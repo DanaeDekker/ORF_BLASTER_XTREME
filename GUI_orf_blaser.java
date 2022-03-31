@@ -24,13 +24,15 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     private JComboBox t_table, orf_mode, matrix, word_size, database;
     private JLabel orf_min_label, orf_max_label, ignore_case_but, file_name_results, word_size_label, expect_label;
     private JCheckBox ignore_case;
-    private String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mitochondrial", "3 Yeast Mitochondrial", "4 Mitochondrial Mold, Protozoan, Coelenterate; Mycoplasma; Spiroplasma",
+    private String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mitochondrial", "3 Yeast Mitochondrial", "4 Mold Mitochondrial; Protozoan Mitochondrial; Coelenterate Mitochondrial; Mycoplasma; Spiroplasma",
             "5 Invertebrate Mitochondrial", "6 Ciliate Nuclear; Dasycladacean Nuclear; Hexamita Nuclear", "7 Echinoderm Mitochondrial; Flatworm Mitochondrial",
             "8 Euplotid Nuclear", "9 Bacterial, Archaeal and Plant Plastid", "10 Alternative Yeast Nuclear", "11 Ascidian Mitochondrial", "12 Alternative Flatworm Mitochondrial",
             "13 Chlorophycean Mitochondrial", "14 Trematode Mitochondrial", "15 Scenedesmus obliquus Mitochondrial Code", "16 Thraustochytrium mitochondrial code",
             "17 Pterobranchia Mitochondrial", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code", "20 Karyorelict Nuclear",
             "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
-    private String[] tables = {"", "table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", ""};
+    private String[] tables = {"", "table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", "--table 14", "--table 16",
+    "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
+
 
     public static void main(String[] args) {
         try {
