@@ -31,7 +31,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             "17 Pterobranchia Mitochondrial", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code", "20 Karyorelict Nuclear",
             "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
     private String[] tables = {"", "--table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", "--table 14", "--table 16",
-    "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
+            "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
 
 
     public static void main(String[] args) {
@@ -262,17 +262,16 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             System.out.println(modus);
             if(modus.equals("Start to stop")){
                 modus = "";}
-            
+
             HashMap<String, String> t_table_map =  new HashMap<String, String>();
             for(int i = 0;i < menu_list.length; i++)
                 t_table_map.put(menu_list[i], tables[i]);
-            
+
             if(t_table.getSelectedItem().equals("Select translation table")){
                 table_num = "";
             } else{
-                table_num = "--table" + t_table_map.get(t_table.getSelectedItem()); 
+                table_num = "--table" + t_table_map.get(t_table.getSelectedItem());
             }
-            
 
             if(max_length.equals("--max ")){
                 max_length = " ";}
@@ -307,6 +306,50 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+    public void use_blast(){
+        String path =  namefield.getText();
+        String file = file_name.getText();
+
+        if(file.equals("")){
+            file = "output";}
+
+        String eval = " -evalue " + expect_value.getText();
+        if(eval.equals(" -evalue ")){
+            eval = "";}
+
+        String matrices = (String) matrix.getSelectedItem();
+        if(matrices.equals("Select score matrix")){
+            matrices = "BLOSUM62";
+        }
+
+        String word = (String) word_size.getSelectedItem();
+
+        String data = (String) database.getSelectedItem();
+        if(data.equals("Select database")){
+            data = "nr";}
+        else {data = data.toLowerCase();}
+
+        String blast_command = "cd $(dirname " + path + ") && blastp -query $(dirname " + path + ")results/orf.fa -db " + data + " -remote -matrix " + matrices + " -word_size " + word + eval + " -out " + file;
+        System.out.println(blast_command);
+        use_blast_command(blast_command);
+    }
+
+    public void use_blast_command(String blast_command){
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command("bash", "-c", blast_command);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -315,7 +358,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         } else if(e.getSource().equals(orfipy_button)){
             use_orfipy();
         } else if (e.getSource().equals(blast_button)){
-            //somethingblast related
+            use_blast();
         }
 
 
