@@ -62,7 +62,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(10,10,10,10);
         window.add(namefield, gridcon);
 
-        openButton = new JButton("open");
+        openButton = new JButton("Select file");
         openButton.setPreferredSize(new Dimension(100,25));
         gridcon.gridx = 1;
         gridcon.gridy = 0;
@@ -76,8 +76,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String[] menu_list = {"",""};
-
+        String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mt", "3 Yest Mt", "4 Mold Mt", "5 Invertebrate Mt", "6 Ciliate, Dasycladacean, Hexamita Nuclear", "7 Echinoderm, Flatworm Mt", "8 Euplotid Nuclear", "9 Bacterial, Archaeal, Plant Plastid", "10 Alternative Yeast Nuclear", "11 Ascidian Mt", "12 Alternative Flatworm Mt","13 Chlorophycean Mt","14 Trematode Mt","15 Scenedesmus obliquus Mt", "16 Thraustochytrium mt", "17 Pterobranchia Mt", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code","20 Karyorelict Nuclear", "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
         t_table = new JComboBox(menu_list);
         t_table.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -140,7 +139,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
     
-        String[] orf_menu_list = {"Select modus", "Start naar stop", "--Partial-3", "--partial-5", "--between-stops"};
+        String[] orf_menu_list = {"Select modus", "Start to stop", "--Partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -249,34 +248,43 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     public void use_orfipy(){
 
         String path =  namefield.getText();
-        
-        String modus =  orf_mode.getName();
+        if(path.equals("")){
+            JOptionPane.showMessageDialog(null, "No document selected");
+        }   else {   
+            String modus=  orf_mode.getName();
+            String max_length = "--max " + orf_max.getText();
+            String min_length =  "--min " + orf_min.getText();
+            String ignore_case_value;
 
-        String table_num = "--table" + "10"; // get linked to hashmap
+            if(modus.equals("Start to stop")){
+                modus = "";}
+            String table_num = "--table" + "10"; // get linked to hashmap
 
-        String max_length = "--max " + orf_max.getText(); //if filed
-
-        String min_length =  "--min " + orf_min.getText(); //if filled /not = min_lenght = "";
-
-        String ignore_case_value;
-        if (ignore_case.isSelected()){
-            ignore_case_value = "--ignore-case";
-        }   else {
-            ignore_case_value = "";
-        }
-        String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("bash", "-c", orfipy_command);
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));       
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
-            } catch (IOException e) {
-            e.printStackTrace();
-            } catch (InterruptedException e) {
-            e.printStackTrace();
+            if(max_length.equals("")){
+                max_length = "";}
+            
+            if(min_length.equals("")){
+                min_length = "";}
+          
+            if (ignore_case.isSelected()){
+                ignore_case_value = "--ignore-case";
+            }   else {
+                ignore_case_value = "";
+            }
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("bash", "-c", orfipy_command);
+            try {
+                Process process = processBuilder.start();
+                BufferedReader reader =
+                        new BufferedReader(new InputStreamReader(process.getInputStream()));       
+                int exitCode = process.waitFor();
+                System.out.println("\nExited with error code : " + exitCode);
+                } catch (IOException e) {
+                e.printStackTrace();
+                } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
         
