@@ -24,7 +24,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     private JComboBox t_table, orf_mode, matrix, word_size, database;
     private JLabel orf_min_label, orf_max_label, ignore_case_but, file_name_results, word_size_label, expect_label;
     private JCheckBox ignore_case;
-    private List<String> menulist;
+
   
     public static void main(String[] args) {
         try {
@@ -252,8 +252,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             String ignore_case_value;
 
             System.out.println(modus);
-            if(modus.equals("Start to stop")){
+            if(modus.equals("Start to stop")|| modus.equals("Select modus")){
                 modus = "";}
+            
             String table_num = "--table" + "10"; // get linked to hashmap
   
             if(max_length.equals("--max ")){
@@ -272,7 +273,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             use_command(orfipy_command);  
         }
     }
+    
+    public void use_blast(){
         
+
+    }
+
     public void use_command(String command){
         ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("bash", "-c", command);
