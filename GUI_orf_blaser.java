@@ -270,7 +270,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             if(t_table.getSelectedItem().equals("Select translation table")){
                 table_num = "";
             } else{
-                table_num = t_table_map.get(t_table.getSelectedItem());
+                table_num = "--table" + t_table_map.get(t_table.getSelectedItem());
             }
 
             if(max_length.equals("--max ")){
@@ -284,15 +284,15 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + "--outdir results " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
             System.out.println(orfipy_command);
-            use_command("bash", orfipy_command);
+            //use_command(orfipy_command);
         }
     }
 
-    public void use_command(String lang, String command){
+    public void use_command(String command){
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(lang, "-c", command);
+        processBuilder.command("bash", "-c", command);
         try {
             Process process = processBuilder.start();
             BufferedReader reader =
@@ -329,11 +329,19 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             data = "nr";}
         else {data = data.toLowerCase();}
 
-        String blast_command = "cd $(dirname " + path + ") && blastp -query $(dirname " + path + ")results/orf.fa -db " + data + " -remote -matrix " + matrices + " -word_size " + word + eval + " -out " + file;
-        System.out.println(blast_command);
-        use_command("python", blast_command);
+        ProcessBuilder processBuilder = new ProcessBuilder("python", "blaster.py", file, file, file, data, matrices, eval);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
