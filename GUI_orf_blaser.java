@@ -24,8 +24,16 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     private JComboBox t_table, orf_mode, matrix, word_size, database;
     private JLabel orf_min_label, orf_max_label, ignore_case_but, file_name_results, word_size_label, expect_label;
     private JCheckBox ignore_case;
-    private List<String> menulist;
-  
+    private String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mitochondrial", "3 Yeast Mitochondrial", "4 Mold Mitochondrial; Protozoan Mitochondrial; Coelenterate Mitochondrial; Mycoplasma; Spiroplasma",
+            "5 Invertebrate Mitochondrial", "6 Ciliate Nuclear; Dasycladacean Nuclear; Hexamita Nuclear", "7 Echinoderm Mitochondrial; Flatworm Mitochondrial",
+            "8 Euplotid Nuclear", "9 Bacterial, Archaeal and Plant Plastid", "10 Alternative Yeast Nuclear", "11 Ascidian Mitochondrial", "12 Alternative Flatworm Mitochondrial",
+            "13 Chlorophycean Mitochondrial", "14 Trematode Mitochondrial", "15 Scenedesmus obliquus Mitochondrial Code", "16 Thraustochytrium mitochondrial code",
+            "17 Pterobranchia Mitochondrial", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code", "20 Karyorelict Nuclear",
+            "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
+    private String[] tables = {"", "table 1", "--table 2", "--table 3", "--table 4", "--table 5", "--table 6", "--table 9", "--table 10", "--table 11", "--table 12", "--table 13", "--table 14", "--table 16",
+    "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
+
+
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -54,7 +62,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.setLayout(new GridBagLayout());
         GridBagConstraints gridcon = new GridBagConstraints();
         gridcon.fill = GridBagConstraints.HORIZONTAL;
-           
+
         namefield = new JTextField(25);
         gridcon.gridx =  0;
         gridcon.gridy  = 0;
@@ -71,14 +79,13 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(openButton, gridcon);
         openButton.addActionListener(this);
 
-        String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mt", "3 Yest Mt", "4 Mold Mt", "5 Invertebrate Mt", "6 Ciliate, Dasycladacean, Hexamita Nuclear", "7 Echinoderm, Flatworm Mt", "8 Euplotid Nuclear", "9 Bacterial, Archaeal, Plant Plastid", "10 Alternative Yeast Nuclear", "11 Ascidian Mt", "12 Alternative Flatworm Mt","13 Chlorophycean Mt","14 Trematode Mt","15 Scenedesmus obliquus Mt", "16 Thraustochytrium mt", "17 Pterobranchia Mt", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code","20 Karyorelict Nuclear", "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
         t_table = new JComboBox(menu_list);
         t_table.setSelectedIndex(0);
         gridcon.gridx = 0;
         gridcon.gridy = 1;
         gridcon.gridwidth = 1;
         gridcon.insets = new Insets(0,10,10,10);
-        window.add(t_table, gridcon); 
+        window.add(t_table, gridcon);
 
 
         orf_min_label = new JLabel("Min ORF lenght");
@@ -133,7 +140,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(0,0,0,10);
         window.add(ignore_case, gridcon);
 
-    
+
         String[] orf_menu_list = {"Select modus", "Start to stop", "--Partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
@@ -141,7 +148,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.gridy = 3;
         gridcon.gridwidth = 1;
         gridcon.insets = new Insets(10,10,10,500);
-        window.add(orf_mode, gridcon); 
+        window.add(orf_mode, gridcon);
 
         orfipy_button = new JButton("Find ORFs");
         gridcon.gridx = 0;
@@ -238,14 +245,14 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             file = file_chooser.getSelectedFile();
             namefield.setText(file.getAbsolutePath());
         }
-    } 
+    }
 
     public void use_orfipy(){
 
         String path =  namefield.getText();
         if(path.equals("")){
             JOptionPane.showMessageDialog(null, "No document selected");
-        }   else {   
+        }   else {
             String modus = (String) orf_mode.getSelectedItem();
             String max_length = "--max " + orf_max.getText();
             String min_length =  "--min " + orf_min.getText();
@@ -255,13 +262,13 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             if(modus.equals("Start to stop")){
                 modus = "";}
             String table_num = "--table" + "10"; // get linked to hashmap
-  
+
             if(max_length.equals("--max ")){
                 max_length = " ";}
-            
+
             if(min_length.equals("--min ")){
                 min_length = " ";}
-          
+
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
             }   else {
@@ -269,29 +276,29 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }
             String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
             System.out.println(orfipy_command);
-            use_command(orfipy_command);  
+            use_command(orfipy_command);
         }
     }
-        
+
     public void use_command(String command){
         ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("bash", "-c", command);
-            try {
-                Process process = processBuilder.start();
-                BufferedReader reader =
-                        new BufferedReader(new InputStreamReader(process.getInputStream()));       
-                int exitCode = process.waitFor();
-                System.out.println("\nExited with error code : " + exitCode);
-                } catch (IOException e) {
-                e.printStackTrace();
-                } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        processBuilder.command("bash", "-c", command);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
+
         if (e.getSource().equals(openButton)){
             get_path();
         } else if(e.getSource().equals(orfipy_button)){
@@ -300,6 +307,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             //somethingblast related
         }
 
-        
+
     }
 }
