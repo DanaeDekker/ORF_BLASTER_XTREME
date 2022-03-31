@@ -71,11 +71,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(openButton, gridcon);
         openButton.addActionListener(this);
 
-        try {
-            menulist = Files.readAllLines(Paths.get("menuoptions.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         String[] menu_list = {"Select translation table", "1 Standard", "2 Vertebrate Mt", "3 Yest Mt", "4 Mold Mt", "5 Invertebrate Mt", "6 Ciliate, Dasycladacean, Hexamita Nuclear", "7 Echinoderm, Flatworm Mt", "8 Euplotid Nuclear", "9 Bacterial, Archaeal, Plant Plastid", "10 Alternative Yeast Nuclear", "11 Ascidian Mt", "12 Alternative Flatworm Mt","13 Chlorophycean Mt","14 Trematode Mt","15 Scenedesmus obliquus Mt", "16 Thraustochytrium mt", "17 Pterobranchia Mt", "18 Candidate Division SR1 and Gracilibacteria", "19 Pachysolen tannophilus Nuclear Code","20 Karyorelict Nuclear", "21 Condylostoma Nuclear", "22 Mesodinium Nuclear", "23 Peritrich Nuclear"};
         t_table = new JComboBox(menu_list);
         t_table.setSelectedIndex(0);
@@ -251,20 +246,21 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         if(path.equals("")){
             JOptionPane.showMessageDialog(null, "No document selected");
         }   else {   
-            String modus=  orf_mode.getName();
+            String modus = (String) orf_mode.getSelectedItem();
             String max_length = "--max " + orf_max.getText();
             String min_length =  "--min " + orf_min.getText();
             String ignore_case_value;
 
+            System.out.println(modus);
             if(modus.equals("Start to stop")){
                 modus = "";}
             String table_num = "--table" + "10"; // get linked to hashmap
-
-            if(max_length.equals("")){
-                max_length = "";}
+  
+            if(max_length.equals("--max ")){
+                max_length = " ";}
             
-            if(min_length.equals("")){
-                min_length = "";}
+            if(min_length.equals("--min ")){
+                min_length = " ";}
           
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
@@ -272,8 +268,14 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 ignore_case_value = "";
             }
             String orfipy_command = "cd $(dirname " + path + ") && orfipy " + "--pep outputorfipy.fa " + " " + max_length + " " + " " + min_length + " " + ignore_case_value + " " + path;
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("bash", "-c", orfipy_command);
+            System.out.println(orfipy_command);
+            use_command(orfipy_command);  
+        }
+    }
+        
+    public void use_command(String command){
+        ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("bash", "-c", command);
             try {
                 Process process = processBuilder.start();
                 BufferedReader reader =
@@ -285,10 +287,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
     }
-        
-    
 
     @Override
     public void actionPerformed(ActionEvent e) {
