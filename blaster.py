@@ -30,7 +30,7 @@ def check_file(file_name):
                 "\tquery\tmatch\n")
 
 
-def blast(file_name, header, seq, db, matrix_name, expect):
+def blast(file_name, header, seq, db, matrix_name, expect, word_size):
     """ Function to BLAST the sequences.
     :param file_name: string - name of the file with the results
     :param header: string - contains the name of the header
@@ -38,6 +38,7 @@ def blast(file_name, header, seq, db, matrix_name, expect):
     :param db: string - name of the database
     :param matrix_name: string - name of the scorematrix
     :param expect: float - expect cutoff value
+    :param word_size: int - word size
     """
     # Use BLAST.
     result_handle = NCBIWWW.qblast("blastp",
@@ -45,6 +46,7 @@ def blast(file_name, header, seq, db, matrix_name, expect):
                                    seq,
                                    matrix_name=matrix_name,
                                    expect=expect,
+                                   word_size=word_size,
                                    hitlist_size=10)
 
     # Parse the result_handle.
@@ -154,15 +156,16 @@ def get_protein(title):
 
 if __name__ == '__main__':
     # Define the variables.
-    file_name = sys.argv[1]
-    header = sys.argv[2]
-    seq = sys.argv[3]
-    db = sys.argv[4]
-    matrix_name = sys.argv[5]
+    file_name = str(sys.argv[1])
+    header = str(sys.argv[2])
+    seq = str(sys.argv[3])
+    db = str(sys.argv[4])
+    matrix_name = str(sys.argv[5])
     expect = float(sys.argv[6])
+    word_size = int(sys.argv[7])
 
     # If neccesary, create the file that will contain the results.
     check_file(file_name)
 
     # Use BLAST on the sequence.
-    blast(file_name, header, seq, db, matrix_name, expect)
+    blast(file_name, header, seq, db, matrix_name, expect, word_size)
