@@ -1,28 +1,19 @@
 // Auteurs: Marco Veninga, Danae Dekker, Stef van Breemen, Martine Rijploeg
 // Klas: bin2b, groep 6
 // Datum: 31MRT2022
+// Known bugs: 
 
 import java.io.*;
 import java.util.*;
 
-/**
- * Read fasta file
- *
- */
 
 public class File_handler_orfblaster {
 
-    // static File directoryPath_ORF = new File("deel_d.fa");
-    // static File directoryPath_BLAST = new File("test.tsv");
-
-    // public static void main(String[] args) throws IOException {
-    //     read_ORF_File();
-    //     // read_BLAST_File();
-    // }
     LinkedHashMap<String, String> resultMap_ORF;
     ArrayList<String[]> resultMap_BLAST;
 
     /** 
+     * This method is used to read and parse a fasta file with ORFs
      * @param path
      * @throws FileNotFoundException
      */
@@ -52,8 +43,13 @@ public class File_handler_orfblaster {
         }
     }
 
-    public static void read_BLAST_File(String path) throws IOException {
-        File directoryPath_BLAST = new File(path);
+    /** 
+     * This method is used to read and parse a tsv file with BLAST results
+     * @param path
+     * @throws FileNotFoundException
+     */
+    public static void read_BLAST_File() throws IOException {
+        File directoryPath_BLAST = new File("Blok_7\\test.tsv");
         try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
             while (scan_BLAST.hasNextLine()) {
                 String[] array;
@@ -65,19 +61,4 @@ public class File_handler_orfblaster {
             }
         }
     }
-     // public static void read_BLAST_File() throws IOException {
-        //     try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
-        //         while (scan_BLAST.hasNextLine()) {
-        //             String[] array;
-        //             String[] split = scan_BLAST.nextLine().split("\t");
-        //             List<String> resultmap = new ArrayList<String>(Arrays.asList(split));
-        //             resultmap.remove(2);
-        //             array = resultmap.toArray(new String[0]);
-        //             System.out.println(Arrays.toString(array));
-        //         }
-        //     }
-        // }
-
 }
-
-
