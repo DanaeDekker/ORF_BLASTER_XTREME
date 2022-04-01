@@ -11,8 +11,7 @@ import java.util.*;
  */
 
 public class File_handler_orfblaster {
-
-    File directoryPath_BLAST = new File("test.tsv");
+   
     LinkedHashMap<String, String> resultMap_ORF;
     ArrayList<String[]> resultMap_BLAST;
 
@@ -40,40 +39,24 @@ public class File_handler_orfblaster {
                             sequence = "";
                         } else {
                             sequence += line;
-                        }
+                }
                     }
                     resultMap_ORF.put(header, sequence);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
-        // try (Scanner scan_ORF = new Scanner(directoryPath_ORF)) {
-        //     resultMap_ORF = new LinkedHashMap<>();
-        //     while (scan_ORF.hasNextLine()) {
-        //         String[] keys = scan_ORF.nextLine().split("\n");
-        //         String[] values = scan_ORF.nextLine().split("\n");
-        //         for (int i = 0; i < keys.length; i++) {
-        //             System.out.println(keys[i]);
-        //             String Sequence = values[i];
-        //             System.out.print(Sequence);
-        //             System.out.print("\n");
-        //             resultMap_ORF.put(keys[i], values[i]);
+        }
+    
+        // public static void read_BLAST_File() throws IOException {
+        //     try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
+        //         while (scan_BLAST.hasNextLine()) {
+        //             String[] array;
+        //             String[] split = scan_BLAST.nextLine().split("\t");
+        //             List<String> resultmap = new ArrayList<String>(Arrays.asList(split));
+        //             resultmap.remove(2);
+        //             array = resultmap.toArray(new String[0]);
+        //             System.out.println(Arrays.toString(array));
         //         }
         //     }
         // }
-    }
-    
-
-    // public static void read_BLAST_File() throws IOException {
-    //     try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
-    //         ArrayList<String[]> resultMap_BLAST = new ArrayList<String[]>();
-    //         while (scan_BLAST.hasNextLine()) {
-    //             String[] split = scan_BLAST.nextLine().split("\t");
-    //             resultMap_BLAST.add(split);
-    //         }
-    //         // for (int i = 0; i < resultMap_BLAST.size(); i++) {
-    //         //     System.out.println(Arrays.toString(resultMap_BLAST.get(i)));
-    //         // }    
-    //     }
-    // }
 }

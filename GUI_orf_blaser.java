@@ -17,7 +17,7 @@ import java.io.*;
 
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
-    private File file;
+    private File genome_file;
     private File_handler_orfblaster  c_file = new File_handler_orfblaster();
     private JButton openButton, orfipy_button, blast_button;
     private JFileChooser file_chooser;
@@ -248,8 +248,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         file_chooser = new JFileChooser();
         reply = file_chooser.showOpenDialog(this);
         if (reply == 0) {
-            file = file_chooser.getSelectedFile();
-            namefield.setText(file.getAbsolutePath());
+            genome_file = file_chooser.getSelectedFile();
+            namefield.setText(genome_file.getAbsolutePath());
         }
     }
 
@@ -315,9 +315,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     }
 
     public void use_blast(){
-        String file = file_name.getText();
+        String file = genome_file.getParent() +"/results/" + file_name.getText();
         if(file.equals("")){
-            file = "output.tsv";}
+            file = genome_file.getParent() +"/results/output.tsv";}
         else{file = file + ".tsv";}
 
         String word = String.valueOf(word_size.getSelectedItem());
@@ -373,14 +373,14 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         if (e.getSource().equals(openButton)){
             get_path();
         } else if(e.getSource().equals(orfipy_button)){
+
             use_orfipy();
             try {
-                c_file.read_ORF_File(file.getParent() +"/results/outputorfipy.fa");
+                c_file.read_ORF_File(genome_file.getParent() +"/results/outputorfipy.fa");
             } catch (FileNotFoundException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
-            //System.out.println(c_file.resultMap_ORF);
         } else if (e.getSource().equals(blast_button)){
             use_blast();
         }
