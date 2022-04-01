@@ -1,7 +1,7 @@
-# auteurs: Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekker
-# klas: bin2b, groep 6
-# datum: 31MRT2022
-# known bugs: none
+# Auteurs: Marco Veninga, Danae Dekker, Stef van Breemen, Martine Rijploeg
+# Klas: bin2b, groep 6
+# Datum: 31MRT2022
+# Known bugs: none
 
 # IMPORTANT!
 # - Install Biopython before using the script.
