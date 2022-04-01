@@ -1,6 +1,6 @@
-// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
-//klas: bin2b, groep 6
-// datum: 31MRT2022
+// Auteurs: Marco Veninga, Danae Dekker, Stef van Breemen, Martine Rijploeg
+// Klas: bin2b, groep 6
+// Datum: 31MRT2022
 
 import javax.swing.*;
 import java.awt.*;
