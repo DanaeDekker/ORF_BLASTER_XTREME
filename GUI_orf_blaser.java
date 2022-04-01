@@ -1,6 +1,6 @@
-// Auteurs: Marco Veninga, Danae Dekker, Stef van Breemen, Martine Rijploeg
-// Klas: bin2b, groep 6
-// Datum: 31MRT2022
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+//klas: bin2b, groep 6
+// datum: 31MRT2022
 
 import javax.swing.*;
 import java.awt.*;
@@ -148,7 +148,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
 
-        String[] orf_menu_list = {"Select modus", "Start to stop", "--Partial-3", "--partial-5", "--between-stops"};
+        String[] orf_menu_list = {"Select modus", "Start to stop", "--partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -267,6 +267,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
             if(modus.equals("Start to stop")){
                 modus = "";}
+            if(modus.equals("Select modus")){
+                JOptionPane.showMessageDialog(null, "No modus selected");
+            }
 
             HashMap<String, String> t_table_map =  new HashMap<String, String>();
             for(int i = 0;i < menu_list.length; i++)
@@ -280,16 +283,18 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
             if(min_length.equals("--min ")){
                 min_length = " ";}
+            else if(isNumeric(min_length)) {}
 
             if(max_length.equals("--max ")){
                 max_length = " ";}
+            else if(isNumeric(max_length)) {}
 
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num + " " + modus + " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
             use_command(orfipy_command);
         }
     }
@@ -303,18 +308,28 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         processBuilder.command("bash", "-c", command);
         try {
             Process process = processBuilder.start();
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-            int exitCode = process.waitFor();
-            System.out.println("\nExited with error code : " + exitCode);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader readers = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String lines=null;
+            while((lines=reader.readLine())!=null){
+                System.out.println(lines);
+            }
+
+            while((lines=readers.readLine())!=null){
+                System.out.println(lines);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void use_blast(){
+        String path =  namefield.getText();
+        if(path.equals("")){
+            JOptionPane.showMessageDialog(null, "No document selected");}
+
         String file = genome_file.getParent() +"/results/" + file_name.getText();
         if(file.equals("")){
             file = genome_file.getParent() +"/results/output.tsv";}
@@ -323,8 +338,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         String word = String.valueOf(word_size.getSelectedItem());
 
         String evalue = expect_value.getText();
-        if(evalue.equals("")){
+        if(evalue == null || evalue.equals("")) {
             evalue = "0.05";}
+        if(isNumeric(evalue)) {}
 
         String matrices = (String) matrix.getSelectedItem();
         if(matrices.equals("Select score matrix")){
@@ -333,7 +349,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
         String data = (String) database.getSelectedItem();
         if(data.equals("Select database")){
-            data = "Swissprot";}
+            JOptionPane.showMessageDialog(null, "Please select the one database available");}
         else {data = data.toLowerCase();}
 
         int count = 0;
@@ -361,6 +377,17 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 e.printStackTrace();
             }
         }
+    }
+
+    public static boolean isNumeric(String string) {
+        int intValue;
+        try {
+            intValue = Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "A given parameter is not a float.");
+        }
+        return false;
     }
 
 
