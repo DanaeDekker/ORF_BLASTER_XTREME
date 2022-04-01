@@ -1,7 +1,14 @@
-# auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+# auteurs: Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekker
 # klas: bin2b, groep 6
 # datum: 31MRT2022
+# known bugs: none
 
+# IMPORTANT!
+# - Install Biopython before using the script.
+# - Header should be a single word without any symbols like > or |.
+# - Call the script in Bash using:
+#   python3 blaster.py output_file.tsv header seq db matrix_name expect 
+#   word_size
 
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
@@ -9,9 +16,6 @@ from Bio import Entrez
 import re
 import sys
 
-# IMPORTANT!
-# Header should be a single word without any symbols like > or |.
-# This script only accepts one header and sequence at a time.
 
 def check_file(file_name):
     """ Check if the file exist and create one if it doesn't.
