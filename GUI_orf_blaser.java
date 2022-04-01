@@ -279,17 +279,19 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }
 
             if(min_length.equals("--min ")){
-                min_length = " ";}
+                min_length = "";}
+            else if(isNumeric(orf_min.getText())) {}
 
             if(max_length.equals("--max ")){
-                max_length = " ";}
+                max_length = "";}
+            else if(isNumeric(orf_max.getText())) {}
 
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num + " " + modus + " " + min_length + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
             use_command(orfipy_command);
         }
     }
