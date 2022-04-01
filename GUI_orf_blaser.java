@@ -1,4 +1,4 @@
-// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekker
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
 //klas: bin2b, groep 6
 // datum: 31MRT2022
 
@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.io.*;
 
-
 public class GUI_orf_blaser extends JFrame implements ActionListener{
 
     private File genome_file;
+    private String blast_file;
     private File_handler_orfblaster  c_file = new File_handler_orfblaster();
     private JButton openButton, orfipy_button, blast_button;
     private JFileChooser file_chooser;
@@ -148,7 +148,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(ignore_case, gridcon);
 
 
-        String[] orf_menu_list = {"Select modus", "Start to stop", "--partial-3", "--partial-5", "--between-stops"};
+        String[] orf_menu_list = {"Select modus", "Start to stop", "--Partial-3", "--partial-5", "--between-stops"};
         orf_mode = new JComboBox(orf_menu_list);
         orf_mode.setSelectedIndex(0);
         gridcon.gridx = 0;
@@ -267,9 +267,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
             if(modus.equals("Start to stop")){
                 modus = "";}
-            if(modus.equals("Select modus")){
-                JOptionPane.showMessageDialog(null, "No modus selected");
-            }
 
             HashMap<String, String> t_table_map =  new HashMap<String, String>();
             for(int i = 0;i < menu_list.length; i++)
@@ -283,18 +280,16 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
             if(min_length.equals("--min ")){
                 min_length = " ";}
-            else if(isNumeric(min_length)) {}
 
             if(max_length.equals("--max ")){
                 max_length = " ";}
-            else if(isNumeric(max_length)) {}
 
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
             }   else {
                 ignore_case_value = "";
             }
-            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num + " " + modus + " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
+            String orfipy_command = "cd $(dirname " + path + ") && orfipy --pep outputorfipy.fa " + " " + table_num+ " " + min_length + " " + " " + max_length + " " + ignore_case_value + " " + "--outdir results " + path;
             use_command(orfipy_command);
         }
     }
@@ -308,39 +303,28 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         processBuilder.command("bash", "-c", command);
         try {
             Process process = processBuilder.start();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            BufferedReader readers = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-            String lines=null;
-            while((lines=reader.readLine())!=null){
-                System.out.println(lines);
-            }
-
-            while((lines=readers.readLine())!=null){
-                System.out.println(lines);
-            }
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
+            int exitCode = process.waitFor();
+            System.out.println("\nExited with error code : " + exitCode);
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void use_blast(){
-        String path =  namefield.getText();
-        if(path.equals("")){
-            JOptionPane.showMessageDialog(null, "No document selected");}
-
-        String file = genome_file.getParent() +"/results/" + file_name.getText();
-        if(file.equals("")){
-            file = genome_file.getParent() +"/results/output.tsv";}
-        else{file = file + ".tsv";}
+        blast_file = genome_file.getParent() +"/results/" + file_name.getText();
+        if(blast_file.equals("")){
+            blast_file = genome_file.getParent() +"/results/output.tsv";}
+        else{blast_file = blast_file + ".tsv";}
 
         String word = String.valueOf(word_size.getSelectedItem());
 
         String evalue = expect_value.getText();
-        if(evalue == null || evalue.equals("")) {
+        if(evalue.equals("")){
             evalue = "0.05";}
-        if(isNumeric(evalue)) {}
 
         String matrices = (String) matrix.getSelectedItem();
         if(matrices.equals("Select score matrix")){
@@ -349,7 +333,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
         String data = (String) database.getSelectedItem();
         if(data.equals("Select database")){
-            JOptionPane.showMessageDialog(null, "Please select the one database available");}
+            data = "Swissprot";}
         else {data = data.toLowerCase();}
 
         int count = 0;
@@ -359,7 +343,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 String header = "ORF" + count;
                 count++;
 
-                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, header, entry.getValue(), data, matrices, evalue, word);
+                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", blast_file, header, entry.getValue(), data, matrices, evalue, word);
                 Process process = processBuilder.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -377,17 +361,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 e.printStackTrace();
             }
         }
-    }
-
-    public static boolean isNumeric(String string) {
-        int intValue;
-        try {
-            intValue = Integer.parseInt(string);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "A given parameter is not a float.");
-        }
-        return false;
     }
 
 
@@ -410,6 +383,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             }
         } else if (e.getSource().equals(blast_button)){
             use_blast();
+            try {
+                c_file.read_BLAST_File(blast_file);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
 }
