@@ -38,6 +38,7 @@ def blast(file_name, header, seq, db, matrix_name, expect, word_size):
     :param db: string - name of the database
     :param matrix_name: string - name of the scorematrix
     :param expect: float - expect cutoff value
+    :param word_size: int - word size
     """
     # Use BLAST.
     result_handle = NCBIWWW.qblast("blastp",
