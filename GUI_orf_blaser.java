@@ -365,6 +365,17 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+    public static boolean isNumeric(String string) {
+        int intValue;
+        try {
+            intValue = Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "A given parameter is not a float.");
+        }
+        return false;
+    }
+
 
     /**
      * @param e
