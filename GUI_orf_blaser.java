@@ -1,16 +1,16 @@
 // auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
 //klas: bin2b, groep 6
 // datum: 31MRT2022
+//know bugs: schrijft de blast resultaten nog niet naar de GUI en kan tijdens basten alleen worden uit gezet door CTRL+C in de terminal
 
+// important:
+// install orfipy on terminal before use
+// Loaded docs can be Fasta format or fastq format
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.io.*;
 
@@ -38,7 +38,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
 
 
-    /**
+    /**main functie begint het programma
      * @param args
      */
     public static void main(String[] args) {
@@ -54,7 +54,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             // handle exception
         }
 
-
+        /**
+         * makes GUI and makes it visible
+         */
         GUI_orf_blaser frame = new GUI_orf_blaser();
         frame.createGUI();
         frame.pack();
@@ -62,6 +64,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         frame.pack();
     }
 
+    /**
+     * creates the GUI components and its variables within
+     */
     public void createGUI(){
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Container window = getContentPane();
@@ -243,6 +248,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         window.add(orfpanelscroll, gridcon);
     }
 
+    /**
+     * get the path that is in the text field
+     */
     public void get_path(){
         int reply;
         file_chooser = new JFileChooser();
@@ -253,7 +261,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
-
+    /**
+     * makes the command string to use orfipy, to do that it gets all the variables from the GUI
+     */
     public void use_orfipy(){
         String path =  namefield.getText();
         if(path.equals("")){
@@ -297,8 +307,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     }
 
 
-    /**
-     * @param command
+    /**executes the command that is in the string
+     * @param command String String that contains the command to execute
      */
     public void use_command(String command){
         ProcessBuilder processBuilder = new ProcessBuilder();
@@ -316,6 +326,9 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * method to make a command to use a python program and excecute it
+     */
     public void use_blast(){
         blast_file = genome_file.getParent() +"/results/" + file_name.getText();
         if(blast_file.equals("")){
@@ -365,6 +378,10 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
+    /**
+     * function to check if a string is a number
+     * @param str String that is checked
+     */
     public static boolean isNumeric(String string) {
         int intValue;
         try {
@@ -378,6 +395,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
 
     /**
+     * action listener to check what button is pressed and act accordingly
      * @param e
      */
     @Override

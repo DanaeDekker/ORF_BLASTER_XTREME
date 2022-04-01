@@ -5,19 +5,18 @@
 import java.io. *;
 import java.util.*;
 
-/**
- * Read fasta file
- *
- */
 
+/**
+ * class that can be loaded in a java script. can read fasta files into a hashmap
+ */
 public class File_handler_orfblaster {
    
     LinkedHashMap<String, String> resultMap_ORF;
     ArrayList<String[]> resultMap_BLAST;
 
 
-    /** 
-     * @param path
+    /** makes a hashmap of the fasta file
+     * @param path str path to the fasta file
      * @throws FileNotFoundException
      */
     public void read_ORF_File(String path) throws FileNotFoundException {
@@ -47,6 +46,11 @@ public class File_handler_orfblaster {
                 }
         }
     
+        /**
+         * reads a tsv and makes an array list of said file
+         * @param path str path to the tsv file
+         * @throws IOException
+         */
         public void read_BLAST_File(String path) throws IOException {
             File directoryPath_BLAST = new File(path);
             try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {
