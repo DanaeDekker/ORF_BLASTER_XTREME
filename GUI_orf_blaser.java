@@ -331,12 +331,19 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
            data = "Swissprot";}
            else {data = data.toLowerCase();}
 
+        int count = 0;
         for (Entry<String, String> entry: c_file.resultMap_ORF.entrySet()){
             System.out.println(entry);
+            
             if(file.equals("")){
                 file = "output";}
+            System.out.println(file + entry.getKey()+ entry.getValue()+ data+ matrices + eval);
+
+            String header = "ORF" + count;
+            count++;
+            
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, entry.getKey(), entry.getValue(), data, matrices, eval);
+                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, header, entry.getValue(), data, matrices, eval);
                 Process process = processBuilder.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -378,7 +385,5 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         } else if (e.getSource().equals(blast_button)){
             use_blast();
         }
-
-
     }
 }
