@@ -1,4 +1,4 @@
-// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekker
 //klas: bin2b, groep 6
 // datum: 31MRT2022
 
