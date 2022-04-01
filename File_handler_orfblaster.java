@@ -30,12 +30,15 @@ public class File_handler_orfblaster {
                 String[] keys = scan_ORF.nextLine().split("\n");
                 String[] values = scan_ORF.nextLine().split("\n");
                 for (int i = 0; i < keys.length; i++) {
-                    resultMap_ORF.put(keys[i] + "\n", values[i]);
-                    System.out.println(keys[i]);
+                    String Sequence = values[i];
+                    System.out.println(Sequence);
+                    System.out.println("\n");
+                    resultMap_ORF.put(keys[i], values[i]);
                 }
             }
         }
     }
+
 
     // public static void read_BLAST_File() throws IOException {
     //     try (Scanner scan_BLAST = new Scanner(directoryPath_BLAST)) {

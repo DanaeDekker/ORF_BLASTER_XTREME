@@ -338,22 +338,12 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
         int count = 0;
         for (Entry<String, String> entry: c_file.resultMap_ORF.entrySet()){
-            System.out.println(entry);
-<<<<<<< HEAD
-            
-            if(file.equals("")){
-                file = "output";}
-            System.out.println(file + entry.getKey()+ entry.getValue()+ data+ matrices + eval);
+            System.out.println("check" + entry.getValue());
+            try {
+                String header = "ORF" + count;
+                count++;
 
-            String header = "ORF" + count;
-            count++;
-            
-            try {
-                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, header, entry.getValue(), data, matrices, eval);
-=======
-            try {
-                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, entry.getKey(), entry.getValue(), data, matrices, evalue, word);
->>>>>>> 32fae26687eeea47ee151a252706b4a68cd20c7d
+                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, header, entry.getValue(), data, matrices, evalue, word);
                 Process process = processBuilder.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -366,8 +356,6 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
                 while((lines=readers.readLine())!=null){
                     System.out.println(lines);
-
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -392,6 +380,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+            //System.out.println(c_file.resultMap_ORF);
         } else if (e.getSource().equals(blast_button)){
             use_blast();
         }
