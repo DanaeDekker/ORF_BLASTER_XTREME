@@ -1,4 +1,4 @@
-// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekkers
+// auteurs:Marco Veninga, Stef van Breemen, Martine Rijploeg, Danae Dekker
 //klas: bin2b, groep 6
 // datum: 31MRT2022
 //know bugs: schrijft de blast resultaten nog niet naar de GUI en kan tijdens basten alleen worden uit gezet door CTRL+C in de terminal
