@@ -37,8 +37,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
             "--table 21", "--table 22", "--table 23", "--table 24", "--table 25", "--table 26", "--table 27", "--table 28", "--table 29", "--table 30"};
 
 
-    
-    /** 
+
+    /**
      * @param args
      */
     public static void main(String[] args) {
@@ -200,7 +200,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         gridcon.insets = new Insets(0,200,0,0);
         window.add(word_size_label, gridcon);
 
-        String[] word_size_menu = {"2", "3",  "6"};
+        String[] word_size_menu = {"2", "3", "6"};
         word_size =  new JComboBox<>(word_size_menu);
         word_size.setSelectedIndex(2);
         gridcon.gridx = 0;
@@ -282,7 +282,7 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                 min_length = " ";}
 
             if(max_length.equals("--max ")){
-                max_length = " ";}           
+                max_length = " ";}
 
             if (ignore_case.isSelected()){
                 ignore_case_value = "--ignore-case";
@@ -294,8 +294,8 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
         }
     }
 
-    
-    /** 
+
+    /**
      * @param command
      */
     public void use_command(String command){
@@ -315,11 +315,16 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
     }
 
     public void use_blast(){
-        String path =  namefield.getText();
         String file = file_name.getText();
-        String eval = expect_value.getText();
-        if(eval.equals(" -evalue ")){
-           eval = "";}
+        if(file.equals("")){
+            file = "output.tsv";}
+        else{file = file + ".tsv";}
+
+        String word = String.valueOf(word_size.getSelectedItem());
+
+        String evalue = expect_value.getText();
+        if(evalue.equals("")){
+            evalue = "0.05";}
 
         String matrices = (String) matrix.getSelectedItem();
         if(matrices.equals("Select score matrix")){
@@ -328,15 +333,13 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
 
         String data = (String) database.getSelectedItem();
         if(data.equals("Select database")){
-           data = "Swissprot";}
-           else {data = data.toLowerCase();}
+            data = "Swissprot";}
+        else {data = data.toLowerCase();}
 
         for (Entry<String, String> entry: c_file.resultMap_ORF.entrySet()){
             System.out.println(entry);
-            if(file.equals("")){
-                file = "output";}
             try {
-                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, entry.getKey(), entry.getValue(), data, matrices, eval);
+                ProcessBuilder processBuilder = new ProcessBuilder("python3", "blaster.py", file, entry.getKey(), entry.getValue(), data, matrices, evalue, word);
                 Process process = processBuilder.start();
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -351,18 +354,18 @@ public class GUI_orf_blaser extends JFrame implements ActionListener{
                     System.out.println(lines);
 
 
-            }
-        } catch (IOException e) {
+                }
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-        
-        /** 
-         * @param e
-         */
-        @Override
+
+    /**
+     * @param e
+     */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource().equals(openButton)){
